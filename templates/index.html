@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Efficiency Measurement</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <p class="eyebrow">Project Control</p>
+                <h1>Engineering Efficiency</h1>
+                <p class="brand-copy">Локальное приложение для работы с моделью PLAN / FACT из Excel-файла.</p>
+            </div>
+
+            <button id="newProjectBtn" class="btn btn-primary btn-block">Новый проект</button>
+
+            <section class="project-list-panel">
+                <div class="section-head">
+                    <h2>Проекты</h2>
+                    <span id="projectCountBadge" class="badge">0</span>
+                </div>
+                <div id="projectList" class="project-list"></div>
+            </section>
+        </aside>
+
+        <main class="workspace">
+            <section class="hero">
+                <div>
+                    <p class="eyebrow">Workbook-driven MVP</p>
+                    <h2>Расчет эффективности инжиниринга по проектам</h2>
+                    <p class="hero-copy">
+                        Выберите проект, заполните параметры PLAN и FACT, а затем сравните индексы и агрегированную статистику.
+                    </p>
+                </div>
+                <div class="hero-metrics">
+                    <div class="hero-card">
+                        <span>PLAN</span>
+                        <strong id="heroPlanScore">-</strong>
+                    </div>
+                    <div class="hero-card">
+                        <span>FACT</span>
+                        <strong id="heroFactScore">-</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card metadata-card">
+                <div class="section-head">
+                    <h2>Карточка проекта</h2>
+                    <span id="currentProjectState" class="status-pill">Новый проект</span>
+                </div>
+                <form id="projectForm" class="project-form">
+                    <input type="hidden" id="projectId">
+                    <label>
+                        <span>Наименование проекта</span>
+                        <input id="projectName" name="name" type="text" placeholder="Например, Реконструкция установки">
+                    </label>
+                    <label>
+                        <span>Код проекта</span>
+                        <input id="projectCode" name="code" type="text" placeholder="PRJ-001">
+                    </label>
+                    <label>
+                        <span>Группа проектов</span>
+                        <input id="projectGroup" name="project_group" type="text" placeholder="Нефтехимия / EPC / Внутренние">
+                    </label>
+                    <label>
+                        <span>Стадия</span>
+                        <input id="projectStage" name="stage" type="text" placeholder="П / РД / FEED">
+                    </label>
+                    <label>
+                        <span>Дата начала</span>
+                        <input id="projectStartDate" name="start_date" type="date">
+                    </label>
+                    <label>
+                        <span>Дата окончания</span>
+                        <input id="projectEndDate" name="end_date" type="date">
+                    </label>
+                    <label>
+                        <span>Руководитель проекта</span>
+                        <input id="projectManager" name="project_manager" type="text" placeholder="ФИО">
+                    </label>
+                    <label>
+                        <span>ГИП</span>
+                        <input id="chiefEngineer" name="chief_engineer" type="text" placeholder="ФИО">
+                    </label>
+                    <label>
+                        <span>Ответственный за проектирование</span>
+                        <input id="designLead" name="design_lead" type="text" placeholder="ФИО">
+                    </label>
+                </form>
+                <div class="form-actions">
+                    <button id="saveProjectBtn" class="btn btn-primary">Сохранить проект</button>
+                    <p id="formMessage" class="message"></p>
+                </div>
+            </section>
+
+            <section class="tabs">
+                <button class="tab-button is-active" data-tab="planTab">PLAN</button>
+                <button class="tab-button" data-tab="factTab">FACT</button>
+                <button class="tab-button" data-tab="statsTab">Статистика</button>
+            </section>
+
+            <section id="planTab" class="tab-panel is-active">
+                <div class="card">
+                    <div class="section-head">
+                        <div>
+                            <h2>PLAN: входные факторы</h2>
+                            <p class="section-copy">Выберите качественную оценку, а приложение подставит численное значение из листа <code>input I</code>.</p>
+                        </div>
+                        <button id="calculatePlanBtn" class="btn btn-primary">Рассчитать PLAN</button>
+                    </div>
+                    <div id="planFactors" class="factor-grid"></div>
+                </div>
+
+                <div id="planResults" class="card hidden">
+                    <div class="section-head">
+                        <h2>PLAN: результаты</h2>
+                        <span id="planTotalBadge" class="score-badge">0.000000</span>
+                    </div>
+                    <div id="planMeasures" class="measure-table"></div>
+                </div>
+            </section>
+
+            <section id="factTab" class="tab-panel">
+                <div class="card">
+                    <div class="section-head">
+                        <div>
+                            <h2>FACT: достигнутые значения</h2>
+                            <p class="section-copy">Введите достигнутые значения по каждому показателю. Границы и веса берутся из листа <code>engineering efficiency FACT</code>.</p>
+                        </div>
+                        <button id="calculateFactBtn" class="btn btn-primary">Рассчитать FACT</button>
+                    </div>
+                    <div id="factMeasures" class="fact-table"></div>
+                </div>
+
+                <div id="factResults" class="card hidden">
+                    <div class="section-head">
+                        <h2>FACT: результаты</h2>
+                        <span id="factTotalBadge" class="score-badge">0.000000</span>
+                    </div>
+                    <div id="factMeasuresResult" class="measure-table"></div>
+                </div>
+            </section>
+
+            <section id="statsTab" class="tab-panel">
+                <div class="card">
+                    <div class="section-head">
+                        <div>
+                            <h2>Статистика</h2>
+                            <p class="section-copy">Фильтруйте проекты по группе, периоду или специалисту.</p>
+                        </div>
+                        <button id="loadStatsBtn" class="btn btn-primary">Обновить статистику</button>
+                    </div>
+
+                    <div class="stats-filters">
+                        <label>
+                            <span>Группа проектов</span>
+                            <input id="statsGroup" type="text" placeholder="Например, Нефтехимия">
+                        </label>
+                        <label>
+                            <span>Специалист</span>
+                            <input id="statsSpecialist" type="text" placeholder="ФИО или часть имени">
+                        </label>
+                        <label>
+                            <span>Период от</span>
+                            <input id="statsDateFrom" type="date">
+                        </label>
+                        <label>
+                            <span>Период до</span>
+                            <input id="statsDateTo" type="date">
+                        </label>
+                    </div>
+
+                    <div id="statsSummary" class="stats-summary"></div>
+                    <div id="statsStages" class="stats-stage-list"></div>
+                    <div id="statsProjects" class="stats-projects"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
