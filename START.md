@@ -17,6 +17,27 @@ curl -s http://127.0.0.1:5000/api/config
 
 Если сервер отвечает JSON-структурой с `plan_factors` и `fact_measures`, приложение поднялось корректно.
 
+## Windows `.exe`
+
+Если нужен standalone запуск на Windows без установленного Python, используйте сборку через PyInstaller.
+
+Основной путь:
+
+```powershell
+pip install -r requirements-windows-build.txt
+pyinstaller --clean EngEstimate.spec
+```
+
+После сборки запускается:
+
+```text
+dist\EngEstimate.exe
+```
+
+В packaged-версии приложение открывается как отдельное desktop-окно без консоли.
+
+Подробности: `docs/WINDOWS_EXE.md`
+
 ## Что проверить руками
 
 1. Создать новый проект и сохранить карточку.

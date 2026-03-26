@@ -37,19 +37,48 @@ python3 app.py
 
 После запуска приложение доступно по адресу [http://127.0.0.1:5000](http://127.0.0.1:5000).
 
+## Windows `.exe`
+
+Для Windows добавлен отдельный desktop entrypoint:
+
+- [desktop_app.py](/Users/Sotnikov/Google%20Drive%20100/10%20-%20coding%20project/Eng_estimate/desktop_app.py)
+- [EngEstimate.spec](/Users/Sotnikov/Google%20Drive%20100/10%20-%20coding%20project/Eng_estimate/EngEstimate.spec)
+- [requirements-windows-build.txt](/Users/Sotnikov/Google%20Drive%20100/10%20-%20coding%20project/Eng_estimate/requirements-windows-build.txt)
+- [scripts/build_windows.bat](/Users/Sotnikov/Google%20Drive%20100/10%20-%20coding%20project/Eng_estimate/scripts/build_windows.bat)
+- [scripts/build_windows.ps1](/Users/Sotnikov/Google%20Drive%20100/10%20-%20coding%20project/Eng_estimate/scripts/build_windows.ps1)
+
+Ожидаемый сценарий:
+
+1. На Windows-машине установить зависимости сборки.
+2. Собрать приложение через PyInstaller.
+3. Получить `dist/EngEstimate.exe`.
+4. Запускать `EngEstimate.exe` как обычное desktop-приложение.
+
+При запуске `.exe` приложение:
+
+- поднимает локальный сервер на свободном порту;
+- открывает встроенное desktop-окно через webview;
+- хранит пользовательские данные отдельно от bundled-файлов.
+
+На Windows сохраненные проекты лежат в `%APPDATA%\\EngEstimate\\projects.json`.
+
 ## Структура
 
 ```text
 app.py                    Flask entrypoint and API
+desktop_app.py            Windows-friendly desktop EXE entrypoint
+EngEstimate.spec          PyInstaller spec for Windows build
 eng_efficiency/
   workbook.py             XLSX parser and model extraction
   calculator.py           PLAN / FACT calculations
   storage.py              Local JSON project storage
   statistics.py           Aggregation and filtering
+  runtime.py              Runtime paths for local/frozen execution
 data/projects.json        Saved projects
 templates/index.html      UI shell
 static/css/styles.css     UI styles
 static/js/script.js       Frontend logic
+scripts/build_windows.*   Windows build scripts
 ```
 
 ## API
@@ -79,3 +108,4 @@ static/js/script.js       Frontend logic
 - `docs/API.md` - API;
 - `docs/CALCULATION_MODEL.md` - расчетная модель;
 - `docs/DEVELOPMENT.md` - разработка и сопровождение.
+- `docs/WINDOWS_EXE.md` - сборка и запуск Windows `.exe`.

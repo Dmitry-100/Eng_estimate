@@ -10,6 +10,7 @@
 - `API.md` - HTTP API, примеры запросов и типовые ответы.
 - `CALCULATION_MODEL.md` - правила вычисления `PLAN` и `FACT`, извлечение модели из Excel.
 - `DEVELOPMENT.md` - локальный запуск, тестирование и правила развития проекта.
+- `WINDOWS_EXE.md` - подготовка standalone `.exe` для Windows.
 
 ## Основные исходные артефакты
 
@@ -24,3 +25,4 @@
 4. `CALCULATION_MODEL.md`
 5. `API.md`
 6. `DEVELOPMENT.md`
+7. `WINDOWS_EXE.md`

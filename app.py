@@ -5,12 +5,10 @@ from pathlib import Path
 from flask import Flask, jsonify, render_template, request
 
 from eng_efficiency.calculator import CalculationError, calculate_fact, calculate_plan
+from eng_efficiency.runtime import projects_storage_path, workbook_path
 from eng_efficiency.statistics import build_statistics
 from eng_efficiency.storage import ProjectStore
 from eng_efficiency.workbook import WorkbookModel, load_workbook_model
-
-
-BASE_DIR = Path(__file__).resolve().parent
 
 
 def _project_summary(project: dict[str, object]) -> dict[str, object]:
@@ -47,8 +45,8 @@ def _validate_metadata(payload: dict[str, object]) -> list[str]:
 def create_app(test_config: dict[str, object] | None = None) -> Flask:
     app = Flask(__name__)
     app.config.update(
-        WORKBOOK_PATH=str(BASE_DIR / "Engineering Efficiency Measurement.xlsx"),
-        STORAGE_PATH=str(BASE_DIR / "data" / "projects.json"),
+        WORKBOOK_PATH=str(workbook_path()),
+        STORAGE_PATH=str(projects_storage_path()),
     )
     if test_config:
         app.config.update(test_config)

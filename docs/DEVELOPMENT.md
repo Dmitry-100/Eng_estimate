@@ -9,6 +9,33 @@ python3 app.py
 
 Приложение запускается на `http://127.0.0.1:5000`.
 
+## Windows build
+
+Сборка standalone `.exe` выполняется на Windows через PyInstaller:
+
+```bash
+pip install -r requirements-windows-build.txt
+pyinstaller --clean EngEstimate.spec
+```
+
+или через готовые скрипты:
+
+```bat
+scripts\build_windows.bat
+```
+
+```powershell
+.\scripts\build_windows.ps1
+```
+
+Итоговый файл:
+
+```text
+dist\EngEstimate.exe
+```
+
+Сборка настроена в оконном режиме без консоли и использует встроенное webview.
+
 ## Тесты
 
 ```bash
@@ -85,6 +112,12 @@ data/projects.json
 - ввести repository interface;
 - перейти на SQLite;
 - добавить экспорт нормализованной workbook-модели в JSON.
+
+### Windows delivery
+
+- добавить icon и version metadata для `.exe`;
+- сделать более дружелюбный shutdown flow внутри окна;
+- при необходимости добавить installer и code signing.
 
 ### Качество
 
